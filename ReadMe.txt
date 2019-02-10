@@ -1,3 +1,2 @@
-Basic to intermediate JavaScript algorithms.
+Basic to intermediate JavaScript algorithms completed for Free Code Camp.
 
-This is an ongoing work in progress.

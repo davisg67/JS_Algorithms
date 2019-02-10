@@ -312,4 +312,132 @@ function titleCase(str) {
   // **********  Intermediate Algorithms  *******************
 
 
+  // *** SUM ALL NUMBERS IN A RANGE ***
+
+  //Return the sum of two numbers plus the sum of all the numbers between them. Numbers can be in any order.
+
+  function sumAll(arr) {
+    let sortedArr = [...arr].sort((a, b) => a-b);  //Create a new sorted array leaving the original array unchanged.
+    
+    let total = 0;
+    let start = sortedArr[0];
+    let end = sortedArr[1];
+    for(let x = start; x <= end; x++)
+    {
+      total += x;
+    }
+    
+    return total;
+  }
   
+  //Test
+  sumAll([1, 4]);
+
+
+
+  // *** DIFF OF TWO ARRAYS ***
+
+  //Compare two arrays and return a new array with any items only found in one of the two given arrays, but not both. 
+  //In other words, return the symmetric difference of the two arrays.
+
+  function diffArray(arr1, arr2) {
+    var newArr = [];
+  
+    for (var i = 0; i < arr1.length; i++) {
+      if (arr2.indexOf(arr1[i]) === -1) {
+        newArr.push(arr1[i]);
+      }
+    }
+    for (i = 0; i < arr2.length; i++) {
+      if (arr1.indexOf(arr2[i]) === -1) {
+        newArr.push(arr2[i]);
+      }
+    }
+  
+    return newArr;
+  }
+
+
+
+// FCC Solutions
+
+//Intermediate
+function diffArray(arr1, arr2) {
+  return arr1
+    .concat(arr2)
+    .filter(
+        item => !arr1.includes(item) || !arr2.includes(item)
+    )
+}
+
+
+//Advanced
+function diffArray(arr1, arr2) {
+  return [
+    ...diff(arr1, arr2),
+    ...diff(arr2, arr1)
+  ]
+  
+  function diff(a, b) {
+    return a.filter(item => b.indexOf(item) === -1);
+  }
+}
+
+  
+  
+  //Test
+  diffArray([1, 2, 3, 5], [1, 2, 3, 4, 5]);
+
+
+
+
+  // *** SEEK AND DESTROY ***
+
+  //You will be provided with an initial array (the first argument in the destroyer function), 
+  //followed by one or more arguments. Remove all elements from the initial array that are of the 
+  //same value as these arguments.
+
+  //My Solution
+  function destroy(argArr)
+  {
+    return function (element) {
+      for (let i = 1; i < argArr.length; i++) {
+        if (element === argArr[i]) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+    
+  }
+
+  function destroyer(arr) {
+    return arr.filter(destroy(arguments));
+  }
+
+
+  //FCC SOLUTIONS
+
+  //Intermeditate
+  function destroyer(arr) {
+    var args = Array.from(arguments).slice(1);  //Set new array from arguements object.
+    return arr.filter(function(val) {
+      //Return the filtered array, using includes() in the callback function to check if val is not in args; 
+      //returning true to keep the value in the original array or false to remove it.
+      return !args.includes(val);
+    });
+  }
+
+
+  //Advanced
+  const destroyer = (arr, ...args) => arr.filter(i => !args.includes(i));
+
+  /*Code using ES6 syntax to declare function using arrow functions.
+  Using spread operator to retrieve the arguments.
+  Return the filtered array, using includes().*/
+
+
+
+//Test
+destroyer([1, 2, 3, 1, 2, 3], 2, 3);
