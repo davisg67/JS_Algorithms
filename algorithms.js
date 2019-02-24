@@ -441,3 +441,81 @@ function diffArray(arr1, arr2) {
 
 //Test
 destroyer([1, 2, 3, 1, 2, 3], 2, 3);
+
+
+
+// *** WHEREFORE ART THOU ***
+
+//Make a function that looks through an array of objects (first argument) and returns an array of all objects that 
+//have matching name and value pairs (second argument). Each name and value pair of the source object has to be present 
+//in the object from the collection if it is to be included in the returned array.
+
+function whatIsInAName(collection, source) {
+  var arr = [];
+  var sourceKeys = Object.keys(source); //Get array of keys in source object.
+  
+
+  arr = collection.filter(function (obj) {
+    //Loop source key arrays.
+    for (var i = 0; i < sourceKeys.length; i++) {
+      //If current collection element object does not have this key OR the value.
+      if(!obj.hasOwnProperty(sourceKeys[i]) || obj[sourceKeys[i]] !== source[sourceKeys[i]]) {
+        return false;
+      }
+    }
+    return true;
+  });
+  
+  return arr;
+}
+
+//Test
+whatIsInAName([{ first: "Romeo", last: "Montague" }, { first: "Mercutio", last: null }, { first: "Tybalt", last: "Capulet" }], { last: "Capulet" });
+
+
+
+// *** SPINAL TAP CASE ***
+
+//Convert a string to spinal case. Spinal case is all-lowercase-words-joined-by-dashes.
+
+
+function spinalCase(str) {
+  
+  var newString = str.replace(/[_ -]/g, " "); //Replace underscores and dashes with a space.
+  
+  newString = newString.replace(/\b\w/g, l => l.toUpperCase()); //Begining of each word to capital.
+  
+  newString = newString.split(/(?=[A-Z-])/); //Splits on capital letters.
+  
+  newString = newString.join(' '); //Join back to string seperated with spacing.
+  
+  newString = newString.replace(/\s/g, "-"); //Replace spacing with dashes.
+  
+  newString = newString.replace(/-{2,}/g,"-").toLowerCase();
+
+  return newString;
+}
+
+
+// FCC Solutions
+function spinalCase(str) {
+  // Create a variable for the white space and underscores.
+  var regex = /\s+|_+/g;
+
+  // Puts a space before any encountered uppercase characters in the string str so that the spaces can be replaced by dashes later on.
+  str = str.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+  // Replaces spaces and underscores with dashes using regex.
+  return str.replace(regex, '-').toLowerCase();
+}
+
+
+function spinalCase(str) {
+  return str.split(/\s|_|(?=[A-Z])/).join('-').toLowerCase()
+}
+
+
+spinalCase('Teletubbies say Eh-oh');
+spinalCase("thisIsSpinalTap") //should return "this-is-spinal-tap"
+spinalCase("Teletubbies say Eh-oh") //should return "teletubbies-say-eh-oh"
+spinalCase("AllThe-small Things") //should return "all-the-small-things"
