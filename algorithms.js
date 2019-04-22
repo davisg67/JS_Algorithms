@@ -519,3 +519,397 @@ spinalCase('Teletubbies say Eh-oh');
 spinalCase("thisIsSpinalTap") //should return "this-is-spinal-tap"
 spinalCase("Teletubbies say Eh-oh") //should return "teletubbies-say-eh-oh"
 spinalCase("AllThe-small Things") //should return "all-the-small-things"
+
+
+
+
+// *** PIG LATIN ***
+
+//Translate the provided string to pig latin.
+//Pig Latin takes the first consonant (or consonant cluster) of an English word, moves it to the end of the word and suffixes an "ay".
+//If a word begins with a vowel you just add "way" to the end.
+//Input strings are guaranteed to be English words in all lowercase.
+
+
+//My Solution
+function translatePigLatin(str) {
+  var newString;
+  var l;
+  var str1;
+  var str2;
+
+  for (var i = 0; i < str.length; i++)
+  {
+    l = str.charAt(i).toLowerCase();
+    
+    //Starts with a vowel?
+    if (i == 0)
+    {
+      if (l == 'a' || l == 'e' || l == 'i' || l == 'o' || l == 'u')
+      {
+        newString = str + 'way';
+        return newString;
+      } 
+    } else {
+      if (l == 'a' || l == 'e' || l == 'i' || l == 'o' || l == 'u')
+      {
+        //Vowel found; end of consonant cluster.
+        str1 = str.slice(0, i); 
+        str2 = str.slice(i);
+        newString = str2 + str1 + 'ay';
+        return newString;
+      } 
+    }
+
+  }
+
+  newString = str + 'ay'  //No vowels found.
+  return newString;
+}
+
+
+//FCC Solutions
+function translatePigLatin(str) {
+  // Create variables to be used
+  var pigLatin = '';
+  var regex = /[aeiou]/gi;
+
+  // Check if the first character is a vowel
+  if (str[0].match(regex)) {
+    pigLatin = str + 'way';
+
+  } else if(str.match(regex) === null) {
+    // Check if the string contains only consonants
+    pigLatin = str + 'ay';
+  } else {
+
+    // Find how many consonants before the first vowel.
+    var vowelIndice = str.indexOf(str.match(regex)[0]);
+
+    // Take the string from the first vowel to the last char
+    // then add the consonants that were previously omitted and add the ending.
+    pigLatin = str.substr(vowelIndice) + str.substr(0, vowelIndice) + 'ay';
+  }
+
+  return pigLatin;
+}
+
+
+function translatePigLatin(str) {
+  function check(obj) {
+      return ['a','i','u','e','o'].indexOf(str.charAt(obj)) == -1 ? check(obj + 1) : obj;
+  }
+
+  return str.substr(check(0)).concat((check(0) === 0 ? 'w' : str.substr(0, check(0))) + 'ay');
+}
+
+
+function translatePigLatin(str) {
+  var strArr = [];
+  var tmpChar;
+
+  // check if the char is consonant using RegEx
+  function isConsonant(char) {
+      return !/[aeiou]/.test(char);
+  }
+
+  // return initial str + "way" if it starts with vowel
+  // if not - convert str to array
+  if (!isConsonant(str.charAt(0)))
+      return str + "way";
+  else
+      strArr = str.split("");
+
+  // push all consonats to the end of the array
+  while (isConsonant(strArr[0])) {
+      tmpChar = strArr.shift();
+      strArr.push(tmpChar);
+  }
+// convert array to string and concatenate "ay" at the end  
+return strArr.join("")+"ay";
+}
+
+
+
+//TEST
+translatePigLatin("consonant");
+
+
+
+// *** SEARCH AND REPLACE ***
+
+//Perform a search and replace on the sentence using the arguments provided and return the new sentence.
+//First argument is the sentence to perform the search and replace on.
+//Second argument is the word that you will be replacing (before).
+//Third argument is what you will be replacing the second argument with (after).
+
+//Note
+//Preserve the case of the first character in the original word when you are replacing it. 
+//For example if you mean to replace the word "Book" with the word "dog", it should be replaced as "Dog".
+
+
+//My Solution
+function myReplace(str, before, after) {
+  var newStr;
+  var strBuf;
+  var isUpperCase = false;
+
+  var index = str.indexOf(before); //Starting index of 'before'.
+
+  if (str.charAt(index) == str.charAt(index).toUpperCase())
+    isUpperCase = true;
+  
+  //Preserve casing of original word.
+  if (isUpperCase)
+  {
+    strBuf = after.charAt(0).toUpperCase() + after.slice(1);
+  }
+  else
+  {
+    strBuf = after.charAt(0).toLowerCase() + after.slice(1);
+  }
+
+  newStr = str.replace(before, strBuf);
+  
+  return newStr;
+}
+
+
+//TEST
+myReplace("A quick brown fox jumped over the lazy dog", "jumped", "leaped");
+
+
+//FCC Solutions
+function myReplace(str, before, after) {
+  //Create a regular expression object
+    var re = new RegExp(before,"gi");
+    
+  //Check whether the first letter is uppercase or not
+    if(/[A-Z]/.test(before[0])){
+    //Change the word to be capitalized
+      after = after.charAt(0).toUpperCase()+after.slice(1);
+       }
+       //Replace the original word with new one
+    var  newStr =  str.replace(re,after);
+  
+   return newStr;
+  }
+
+
+// *** DNA PAIRING ***
+
+//The DNA strand is missing the pairing element. Take each character, get its pair, and return the results as a 2d array.
+//Base pairs are a pair of AT and CG. Match the missing element to the provided character.
+//Return the provided character as the first element in each array.
+//For example, for the input GCG, return [["G", "C"], ["C","G"],["G", "C"]]
+//The character and its pair are paired up in an array, and all the arrays are grouped into one encapsulating array.
+
+//My Solution
+function pairElement(str) {
+  var pairs = new Array(str.length);
+  var arr = new Array(2);
+  var dna;
+  
+  for (var i = 0; i < str.length; i++)
+  {
+    pairs[i] = new Array(2);
+
+    dna = str.charAt(i);
+    switch(dna) {
+      case "A":
+        pairs[i][0] = "A";
+        pairs[i][1] = "T";
+        break;
+      case "T":
+        pairs[i][0] = "T";
+        pairs[i][1] = "A";
+        break;
+      case "C":
+        pairs[i][0] = "C";
+        pairs[i][1] = "G";
+        break;
+      case "G":
+        pairs[i][0] = "G";
+        pairs[i][1] = "C";
+        break;
+      default:
+        alert('Error');
+    }
+    
+  }
+  
+  return pairs;
+}
+
+
+//FCC Solutions
+function pairElement(str) {
+  // Return each strand as an array of two elements, the original and the pair.
+  var paired = [];
+
+  // Function to check with strand to pair.
+  var search = function(char) {
+    switch (char) {
+      case 'A':
+        paired.push(['A', 'T']);
+        break;
+      case 'T':
+        paired.push(['T', 'A']);
+        break;
+      case 'C':
+        paired.push(['C', 'G']);
+        break;
+      case 'G':
+        paired.push(['G', 'C']);
+        break;
+    }
+  };
+
+  // Loops through the input and pair.
+  for (var i = 0; i < str.length; i++) {
+    search(str[i]);
+  }
+
+  return paired;
+}
+
+
+function pairElement(str) {
+  //create object for pair lookup
+  var pairs = {
+    "A": "T",
+    "T": "A",
+    "C": "G",
+    "G": "C"
+  }
+  //split string into array of characters
+  var arr = str.split("");
+  //map character to array of character and matching pair
+  return arr.map(x => [x,pairs[x]]);
+}
+
+//TEST
+pairElement("GCG");
+
+
+
+// *** MISSING LETTERS ***
+
+//Find the missing letter in the passed letter range and return it.
+//If all letters are present in the range, return undefined.
+
+//My solution
+function fearNotLetter(str) {
+  var letters = "abcdefghijklmnopqrstuvwxyz";
+  var lettersIndex = letters.search(str);  //Search for the input range arguement.
+  
+  if (lettersIndex >= 0)
+    return undefined;  //A match for the input range was found, all letters present.
+
+  lettersIndex = letters.indexOf(str[0]);
+  for (var i = 0; i < str.length; i++)
+  {
+    if (letters[lettersIndex] != str[i])
+    {
+      return letters[lettersIndex];
+    }
+
+    lettersIndex++;
+  }
+  
+  return "error";
+}
+
+
+//FCC Solutions
+function fearNotLetter(str) {
+
+  for(var i = 0; i < str.length; i++) {
+    /* code of current character */
+    var code = str.charCodeAt(i);
+
+    /* if code of current character is not equal to first character + no of iteration
+    hence character has been escaped */
+    if (code !== str.charCodeAt(0) + i) {
+
+      /* if current character has escaped one character find previous char and return */
+      return String.fromCharCode(code - 1);
+    }  
+  }
+  return undefined;
+}
+
+//No For Loop
+function fearNotLetter(str) {
+  var compare = str.charCodeAt(0), missing;
+
+  str.split('').map(function(letter,index) {
+    if (str.charCodeAt(index) == compare) {
+      ++compare;
+    } else {
+      missing = String.fromCharCode(compare);
+    }
+  });
+
+  return missing;
+}
+
+//Advanced solution
+function fearNotLetter(str) {
+  for (let i = 1; i < str.length; ++i) {
+    if (str.charCodeAt(i) - str.charCodeAt(i-1) > 1) {
+      return String.fromCharCode(str.charCodeAt(i - 1) + 1);
+    }
+  }
+}
+
+
+//TEST
+fearNotLetter("abce");
+
+
+
+// *** Sorted Union ***
+
+/*Write a function that takes two or more arrays and returns a new array of unique values in the order of the original provided arrays.
+In other words, all values present from all arrays should be included in their original order, but with no duplicates in the final array.
+The unique numbers should be sorted by their original order, but the final array should not be sorted in numerical order.
+*/
+
+//My solution
+
+function uniteUnique() {
+  var args = [...arguments];
+  var result = [];
+
+  for(var i = 0; i < args.length; i++) {
+    for(var j = 0; j < args[i].length; j++) {
+       if(!result.includes(args[i][j])) {
+        result.push(args[i][j]);
+      }
+    }
+  }
+  return result; 
+}
+
+
+//Better Solution
+function uniteUnique() {
+  var arr = [];
+  var i = 0;
+
+  //Convert the arguments object into an array
+  while (arguments[i]){
+    arr = arr.concat(arguments[i]); i++;
+  }
+
+  //Remove the duplicate elements by checking the index of each element and removing same elements with different positions.
+  var uniqueArray = arr.filter(function(item, pos) {
+    return arr.indexOf(item) == pos;
+  });
+
+  return uniqueArray;  
+}
+
+//TEST
+uniteUnique([1, 3, 2], [5, 2, 1, 4], [2, 1]);
